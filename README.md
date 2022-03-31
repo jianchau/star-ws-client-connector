@@ -1,1 +1,1 @@
-# starwsc
+# star-ws-client-connector
