@@ -1,5 +1,5 @@
-import { StarWsClientConfig } from '..';
-import { WebSocketSubject } from 'rxjs/webSocket';
+import { StarWsClientConfig } from "..";
+import { WebSocketSubject } from "rxjs/webSocket";
 export declare class WsClient {
     static _instance: WsClient | null;
     _clientConfig: StarWsClientConfig<any> | any;

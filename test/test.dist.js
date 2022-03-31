@@ -28,17 +28,20 @@ var WsClient = /** @class */ (function () {
             // connect to the ws-server.
             _this.clientSubject = (0, webSocket_1.webSocket)(__assign(__assign({ openObserver: {
                     next: function () {
-                        WsClientConnecter.logMsg('>> [WSClient.Opened] The wss conn success!');
+                        WsClientConnecter.logMsg(">> [WSClient.Opened] The wss conn success!");
                         resolve(_this.clientSubject);
                     },
                 }, closeObserver: {
                     next: function (event) {
-                        WsClientConnecter.logMsg('>> [WSCLient.Closed] ', event);
+                        WsClientConnecter.logMsg(">> [WSCLient.Closed] ", event);
                         reject(event);
                     },
                 } }, _this._clientConfig), { serializer: function (msg) {
                     WsClientConnecter.logMsg(">> [starwsc seq] ".concat(_this._seq));
-                    WsClientConnecter.logMsg(">> [starwsc sendData ".concat(msg.data.bizCode, "]"), msg);
+                    var sensBizCodeArr = ["a1001"];
+                    if (sensBizCodeArr.indexOf(msg.data.bizCode) === -1) {
+                        WsClientConnecter.logMsg(">> [starwsc sendData ".concat(msg.data.bizCode, "]"), msg);
+                    }
                     var message = JSON.stringify(msg.data);
                     var wspkg = new WsPackage_1.default(msg.cmd, _this._clientConfig.agent, _this._clientConfig.client, _this._seq++, message);
                     var buf = wspkg.encode();
@@ -48,8 +51,8 @@ var WsClient = /** @class */ (function () {
                     var p = new Promise(function (resolve, reject) {
                         try {
                             var type = Object.prototype.toLocaleString.call(e.data);
-                            if (type === '[object Blob]') {
-                                reader.readAsText(e.data, 'utf-8');
+                            if (type === "[object Blob]") {
+                                reader.readAsText(e.data, "utf-8");
                                 reader.onload = function (e) {
                                     var data = JSON.parse(reader.result);
                                     resolve(data);
@@ -71,7 +74,7 @@ var WsClient = /** @class */ (function () {
     };
     WsClient.prototype.testConfig = function (config) {
         // serializer and deserializer will be overrided by starwsc package
-        var fixedConfig = ['serializer', 'deserializer'];
+        var fixedConfig = ["serializer", "deserializer"];
         var len = fixedConfig.length;
         var warnStr = fixedConfig.reduce(function (prev, cur, index, arr) {
             if (index < len - 1)
@@ -80,8 +83,8 @@ var WsClient = /** @class */ (function () {
                 return "".concat(prev, "\u3001").concat(cur);
         });
         for (var key in config) {
-            if (fixedConfig.includes(key)) {
-                WsClientConnecter.logMsg('%c%s', 'color:red', ">> [starwsc config]  ".concat(warnStr, " will be overrided by starwsc package"));
+            if (fixedConfig.indexOf(key) !== -1) {
+                WsClientConnecter.logMsg("%c%s", "color:red", ">> [starwsc config]  ".concat(warnStr, " will be overrided by starwsc package"));
             }
         }
     };
@@ -93,7 +96,7 @@ var WsClientConnecter = /** @class */ (function () {
     }
     WsClientConnecter.getInstance = function (alias) {
         var _a;
-        if (alias === void 0) { alias = 'default'; }
+        if (alias === void 0) { alias = "default"; }
         if (this.isWscExists(alias)) {
             return (_a = this._CLIENT_MAP[alias]) === null || _a === void 0 ? void 0 : _a.instance;
         }
@@ -113,7 +116,7 @@ var WsClientConnecter = /** @class */ (function () {
         }
     };
     WsClientConnecter.init = function (config, alias) {
-        if (alias === void 0) { alias = 'default'; }
+        if (alias === void 0) { alias = "default"; }
         // init _enableLog
         if ((config === null || config === void 0 ? void 0 : config.enableLog) === false) {
             this._enableLog = false;
